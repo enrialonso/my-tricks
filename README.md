@@ -16,3 +16,5 @@
     date '+%Y-%m-%d %H:%M:%S'
     echo END
     ```
+    
+    ssh-keygen -f key.pem -y
