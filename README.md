@@ -16,32 +16,42 @@
     date '+%Y-%m-%d %H:%M:%S'
     echo END
     ```
-    
-    ssh-keygen -f key.pem -y
-    
-#!/bin/bash -ex
-exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-echo BEGIN
-apt update -y
-apt install python nginx -y
-echo "
-[general]
-state_file = /var/awslogs/state/agent-state
- 
-[/var/log/nginx/access.log]
-file = /var/log/nginx/access.log
-log_group_name = nginx-pro-access
-log_stream_name = {instance_id}
-datetime_format = %b %d %H:%M:%S
 
-[/var/log/nginx/error.log]
-file = /var/log/nginx/error.log
-log_group_name = nginx-pro-error
-log_stream_name = {instance_id}
-datetime_format = %b %d %H:%M:%S
-" > conf-aws-logs
-curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
-chmod +x ./awslogs-agent-setup.py
-./awslogs-agent-setup.py -n -r eu-west-1 -c conf-aws-logs
-echo END
+- ### Build a public key form private key:
 
+    `ssh-keygen -f key.pem -y`
+
+- ### Send logs to AWS CloudWatch form NGINX:
+
+    The EC2 instance need permisions to send logs to cloudwatch first.
+        
+    ```bash
+
+    #!/bin/bash -ex
+    exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+    echo BEGIN
+    apt update -y
+    apt install python nginx -y
+    echo "
+    [general]
+    state_file = /var/awslogs/state/agent-state
+    
+    [/var/log/nginx/access.log]
+    file = /var/log/nginx/access.log
+    log_group_name = nginx-pro-access
+    log_stream_name = {instance_id}
+    datetime_format = %b %d %H:%M:%S
+
+    [/var/log/nginx/error.log]
+    file = /var/log/nginx/error.log
+    log_group_name = nginx-pro-error
+    log_stream_name = {instance_id}
+    datetime_format = %b %d %H:%M:%S
+    " > conf-aws-logs
+
+    curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+    chmod +x ./awslogs-agent-setup.py
+    ./awslogs-agent-setup.py -n -r <REGION> -c conf-aws-logs
+    echo END
+
+    ```
