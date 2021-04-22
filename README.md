@@ -55,3 +55,23 @@
     echo END
 
     ```
+### Use playwright-python with sock5 Tor proxy:
+
+first start a docker for Tor:
+
+`docker run -d --name tor-socks-proxy -p 127.0.0.1:9150:9150/tcp peterdavehello/tor-socks-proxy:latest`
+
+Python script for test:
+
+```python
+from playwright.sync_api import sync_playwright
+from time import sleep
+
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=False, proxy={"server": 'socks5://127.0.0.1:9150'})
+    page = browser.new_page()
+    page.goto('https://check.torproject.org/')
+    sleep(5)
+    browser.close()
+```
