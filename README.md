@@ -75,8 +75,13 @@ with sync_playwright() as p:
     sleep(5)
     browser.close()
 ```
-### Instal Postman .deb
+### Install Postman .deb
 
+##### Source
 ```bash
 https://gist.github.com/SanderTheDragon/1331397932abaa1d6fbbf63baed5f043
+```
+##### Command
+```bash
+curl https://gist.githubusercontent.com/SanderTheDragon/1331397932abaa1d6fbbf63baed5f043/raw/postman-deb.sh | sh
 ```
