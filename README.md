@@ -75,3 +75,8 @@ with sync_playwright() as p:
     sleep(5)
     browser.close()
 ```
+### Instal Postman .deb
+
+```bash
+https://gist.github.com/SanderTheDragon/1331397932abaa1d6fbbf63baed5f043
+```
